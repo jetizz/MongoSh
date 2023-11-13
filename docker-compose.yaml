@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - "27017:27017"
+
+  mongosh:
+    image: jetiz/mongosh:local
+    environment:
+      - SERVER_NAME=mongo
+      - SERVER_PORT=27017
+      - DB_NAME=foo

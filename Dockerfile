@@ -5,4 +5,5 @@ WORKDIR /opt
 ADD https://raw.githubusercontent.com/jetizz/Scriptorium/master/wait-for-it.sh ./wait-for-it.sh
 COPY ["./entrypoint.sh", "/opt"]
 COPY ["./run.sh", "/opt"]
+RUN chmod +x /opt/*.sh
 ENTRYPOINT ["/bin/bash", "/opt/entrypoint.sh"]

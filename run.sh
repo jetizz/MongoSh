@@ -1,5 +1,5 @@
-DB_AUTHSOURCE=$($DB_AUTHSOURCE:admin)
-SERVER_PORT=$($SERVER_PORT:27017)
+DB_AUTHSOURCE=${$DB_AUTHSOURCE:-admin}
+SERVER_PORT=${$SERVER_PORT:-27017}
 
 script="/tmp/__full__.js"
 i=0
@@ -31,13 +31,13 @@ else
         if [[ -f $f ]]; then
             case "$f" in
                 *.js)
-                        echo "Embed: $f";
-                        cat "$f" >> "$script"
-                        echo "$(printf "\n\n/**** File: $f */\n\n")" >> "$script"
-                        ((i++))
+                    echo "Embed: $f";
+                    cat "$f" >> "$script"
+                    echo "$(printf "\n\n/**** File: $f */\n\n")" >> "$script"
+                    ((i++))
                 ;;
                 *)
-                        echo "Ignore: $f"
+                    echo "Ignore: $f"
                 ;;
             esac
         fi
