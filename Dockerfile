@@ -1,9 +1,9 @@
 FROM mongo:6.0.2
 
-RUN mkdir /opt/init
-WORKDIR /opt
+RUN mkdir /var/mongosh && mkdir /var/mongosh/scripts
+WORKDIR /var/mongosh
 ADD https://raw.githubusercontent.com/jetizz/Scriptorium/master/wait-for-it.sh ./wait-for-it.sh
-COPY ["./entrypoint.sh", "/opt"]
-COPY ["./run.sh", "/opt"]
-RUN chmod +x /opt/*.sh
-ENTRYPOINT ["/bin/bash", "/opt/entrypoint.sh"]
+COPY ["./entrypoint.sh", "/var/mongosh"]
+COPY ["./run.sh", "/var/mongosh"]
+RUN chmod +x /var/mongosh/*.sh
+ENTRYPOINT ["/bin/bash", "/var/mongosh/entrypoint.sh"]
