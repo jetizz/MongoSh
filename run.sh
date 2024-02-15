@@ -1,6 +1,8 @@
 DB_AUTHSOURCE=${DB_AUTHSOURCE:-admin}
 SERVER_PORT=${SERVER_PORT:-27017}
 GLOBAL_TRANSACTION=${GLOBAL_TRANSACTION:-0}
+SCRIPT_HEADER_FILE=${SCRIPT_HEADER:-/var/mongosh/static/header.js}
+SCRIPT_FOOTER_FILE=${SCRIPT_FOOTER:-/var/mongosh/static/footer.js}
 
 script="/tmp/__full__.js"
 i=0
@@ -20,6 +22,8 @@ echo " - DB_USER=$DB_USER"
 echo " - DB_PASS=$DB_PASS"
 echo " - DB_AUTHSOURCE=$DB_AUTHSOURCE"
 echo " - GLOBAL_TRANSACTION=$GLOBAL_TRANSACTION"
+echo " - SCRIPT_HEADER_FILE=$SCRIPT_HEADER_FILE"
+echo " - SCRIPT_FOOTER_FILE=$SCRIPT_FOOTER_FILE"
 echo "Using parameters:"
 echo " - Uri=$mongouri"
 echo " - Script=$script"
@@ -31,17 +35,48 @@ append_text() {
 append_log() {
     echo "print('$1');" >> "$script"
 }
+append_header_footer() {
+    # param $1 = header | footer
+    
+    src_txt=""
+    src_file=""
+    if [[ "$1" == "header" ]]; then
+        src_txt="$SCRIPT_HEADER"
+        src_file="$SCRIPT_HEADER_FILE"
+    elif [[ "$1" == "footer" ]]; then
+        src_txt="$SCRIPT_FOOTER"
+        src_file="$SCRIPT_FOOTER_FILE"
+    fi
+    
+    if [ -n "$src_txt" ]; then
+        append_text "// Static $1 obtained from text source"
+        append_text "\n$src_txt\n"
+    elif [[ -f $src_file ]]; then
+        # to be safe - remove BOM
+        append_text "// Static $1 obtained from text file: $src_file"
+        sed '1s/^\xEF\xBB\xBF//' "$src_file" >> "$script"
+    else
+        append_text "// Static $1 skipped"
+    fi
+}
 append_file() {
     dir=${1%/*}
     file=${1##*/}
     
-    append_log "Executing: $1\n"
+    append_log "\nExecuting: $1..."
+
+    append_header_footer "header"
+    
+    append_text "// Runtime variables: $1"
     append_text "SCRIPT_PATH=\"$dir\""
     append_text "SCRIPT_FILE=\"$file\""
 
     #cat "$1" >> $script
     # to be safe - remove BOM
+    append_text "// File: $1"
     sed '1s/^\xEF\xBB\xBF//' "$1" >> "$script"
+
+    append_header_footer "footer"
 }
 prepend_text() {
     tmp=$(mktemp)

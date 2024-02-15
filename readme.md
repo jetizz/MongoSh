@@ -26,6 +26,18 @@ DB_AUTHSOURCE
 # 1 = wrap combined script into transaction
 # 2 = wrap individual scripts into transactions -- not supported
 GLOBAL_TRANSACTION
+
+# Prepended to each script file. Ignored if empty.
+SCRIPT_HEADER
+# Prepended to each script file. Ignored if SCRIPT_HEADER is set or empty.
+# Default value: /var/mongosh/static/header.js
+SCRIPT_HEADER_FILE
+
+# Appended to each script file. Ignored if empty.
+SCRIPT_FOOTER
+# Appended to each script file. Ignored if SCRIPT_FOOTER is set or empty.
+# Default value: /var/mongosh/static/footer.js
+SCRIPT_FOOTER_FILE
 ```
 
 Inside your script you can use defined variables:
