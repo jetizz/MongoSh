@@ -1,5 +1,5 @@
-# docker build . -t jetiz/mongosh:1.0.0
-# docker push jetiz/mongosh:1.0.0
+# docker build . -t jetiz/mongosh:2.0.0
+# docker push jetiz/mongosh:2.0.0
 
 # TEST 
 #docker build . -t jetiz/mongosh:local

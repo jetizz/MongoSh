@@ -1,4 +1,4 @@
-FROM mongo:6.0.2
+FROM mongo:8.0.3
 
 RUN mkdir /var/mongosh && mkdir /var/mongosh/scripts
 WORKDIR /var/mongosh
